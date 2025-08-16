@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Corepay Guardian AI — Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Socket.IO client CDN -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">CG</div>
+        <div>
+          <h1>Corepay Guardian AI</h1>
+          <p class="lead">Real-time risk monitoring · Fraud alerts · Suggested next steps</p>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        <button id="simulateBtn" class="btn">Simulate Event</button>
+        <button id="exportBtn" class="btn export">Export CSV</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="col-left">
+        <div class="card risk-score">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="color:var(--muted);font-size:13px">Overall risk score (0-100)</div>
+              <div class="score-big" id="overallScore">32</div>
+              <div class="trend" id="scoreTrend">Stable</div>
+            </div>
+            <div style="text-align:right">
+              <div style="color:var(--muted);font-size:13px">Active alerts</div>
+              <div style="font-weight:800;font-size:20px;color:#ffd166" id="activeAlertsCount">2</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="small-metrics">
+            <div class="metric">
+              <div style="color:var(--muted);font-size:12px">Avg. risk (24h)</div>
+              <strong id="avg24">27</strong>
+            </div>
+            <div class="metric">
+              <div style="color:var(--muted);font-size:12px">Alerts (24h)</div>
+              <strong id="alerts24">14</strong>
+            </div>
+            <div class="metric">
+              <div style="color:var(--muted);font-size:12px">Auto-blocked</div>
+              <strong id="blockedCount">3</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 8px 0">Recent alerts</h3>
+          <div style="max-height:360px;overflow:auto">
+            <table id="alertsTable">
+              <thead>
+                <tr><th>Time</th><th>Type</th><th>Risk</th><th>Entity</th><th></th></tr>
+              </thead>
+              <tbody>
+                <!-- rows inserted dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card next-steps">
+          <h3>Suggested next steps</h3>
+          <div id="stepsList">
+            <!-- steps inserted dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card charts">
+          <div>
+            <canvas id="riskChart" height="160"></canvas>
+            <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+              <div style="color:var(--muted)">Time range</div>
+              <select id="rangeSelect" style="margin-left:6px;padding:6px;border-radius:8px;background:transparent;color:#e6eef6;border:1px solid rgba(255,255,255,0.04)">
+                <option value="1">Last hour</option>
+                <option value="24" selected>Last 24h</option>
+                <option value="168">Last 7d</option>
+              </select>
+              <div style="margin-left:auto;color:var(--muted)">Last update: <span id="lastUpdate">—</span></div>
+            </div>
+          </div>
+          <div style="width:320px;margin-left:18px">
+            <canvas id="alertsBar" height="160"></canvas>
+            <div style="margin-top:10px;color:var(--muted);font-size:13px">Alert categories</div>
+          </div>
+        </div>
+
+        <div style="height:18px"></div>
+        <div class="card">
+          <h3 style="margin:0 0 8px 0">Investigations</h3>
+          <p style="color:var(--muted);margin-top:0">Open investigations and outcome suggestions</p>
+          <div id="investigationsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Corepay Guardian AI · Demo dashboard · Not for production
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
